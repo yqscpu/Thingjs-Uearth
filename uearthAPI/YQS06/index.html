@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>园区</title>
+    <!-- 引包 -->
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/uearth.min.v1.7.8.5.js"></script>
+    <!-- 样式 -->
+    <style>
+        button {
+            width: 100px;
+            height: 60px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div3d"></div>
+    <!-- 按钮 -->
+    <button id="create">创建园区</button>
+
+    <script>
+        window.onload = function () {
+            var app = new THING.App({
+                container: 'div3d'
+            });
+
+            // 图层
+            var map = app.create({
+                type: 'Map',
+                url: './map1/map.json',
+                resourceConfig: {
+                    resourcePrefix: './map1', // 资源路径前缀
+                    baseLayerUrls: [
+                        'https://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}'
+                    ], // 瓦片图层
+                },
+                complete: function (event) {
+                    console.log(event.object.userLayers.length);
+                }
+            });
+            app.one(THING.EventType.CameraChangeEnd, () => {
+                setTimeout(() => {
+                    // 清除矢量球
+                    const ball = app.query('#vectorBaseLayer')[0];
+                    if (ball) ball.destroy();
+                }, 500);
+            });
+
+            // 创建一个 ThingLayer
+            var thingLayer = app.create({
+                type: "ThingLayer",
+                name: "thingLayer01"
+            });
+            // 将ThingLayer添加到地图中
+            map.addLayer(thingLayer);
+
+
+            //获取坐标（经纬度）
+            var sceneLonlat = [118.76240015029906,32.05542669746297];
+            //把经纬度->三维,第二个参数代表离地高度
+            var lonlat1 = CMAP.Util.convertLonlatToWorld(sceneLonlat, 0.5)
+            //计算地球上的旋转角度
+            var angles = CMAP.Util.getAnglesFromLonlat(sceneLonlat, 65);
+
+            // 3.添加事件
+            var create = document.getElementById('create');
+            console.log(create);
+            // 监听
+            create.addEventListener('click', function (ev) {
+                // 触发
+                camput();
+            })
+
+            //创建
+            function camput() {
+                //开始创建
+                var campus = app.create({
+                    //类型
+                    type: 'Campus',
+                    name: '园区',
+                    url: 'https://www.thingjs.com/static/models/storehouse',
+                    //三纬坐标
+                    position: lonlat1,
+                    //增加旋转
+                    angles: angles,
+                    //回调
+                    complete: (ev) => {
+                        console.log(ev.object.id);
+                        //创建灯牌
+                        var thing = app.create({
+                            type: 'Marker',
+                            //相对位置
+                            offset: [0, 5, 0],
+                            size: 2,
+                            //保持，true不随远近进行控制
+                            keepSize: true,
+                            //路径
+                            url: 'https://thingjs.com/static/images/reminder.png',
+                            //父亲
+                            parent: app.query('.Building')[0]
+                        });
+
+                        //点击定牌后切换为园区视角
+                        thing.on('click', () => {
+                            //阻止默认的鼠标右键单击退出楼层的事件
+                            //app.pauseEvent(THING.EventType.Click,null,THING.EventTag.LevelBackOperation);
+
+                            //使用右键双击退出楼层(不能使用：没有默认的事件支持，可以使用app全局支持)
+                            //app.resumeEvent(THING.EventType.DBLClick,null,THING.EventTag.LevelBackOperation)
+
+                            //测试
+                            var marker = app.query('.Marker')[0];
+                            //层级
+                            app.level.change(campus);
+                            //测试
+                            if (marker.visible == false) {
+                                marker.visible = true
+                            }
+                            //判断右键双击
+                            app.on('dblclick', (e) => {
+                                //右键(注意：0是左键；1是右键)
+                                if (e.button == 2) {
+                                    console.log('111');
+                                    app.level.change(map);
+                                    //app.level.back()
+                                    //测试
+                                    if (marker.visible == false) {
+                                        marker.visible = true
+                                    }
+                                }
+                            })
+                        })
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

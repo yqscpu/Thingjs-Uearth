@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加</title>
+    <script src="./js/thingjs.min-V1.2.7.7.js"></script>
+    <style>
+        div {
+            height: 960px;
+        }
+
+        button {
+            width: 80px;
+            height: 50px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+        }
+
+        button:nth-child(2) {
+            top: 56px;
+        }
+
+        button:nth-child(3) {
+            top: 98px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- 容器 -->
+    <div id="3d"></div>
+
+    <!-- 按钮 -->
+    <button id="snow">下雪</button>
+    <button id="rain">下雨</button>
+    <button id="fog1">下雾</button>
+
+    <!-- 引用 -->
+    <script>
+        //1.引入一个thingjs本地
+        var app = new THING.App({
+            container: '3d',
+            url: 'https://www.thingjs.com/static/models/storehouse' // 场景地址
+        })
+        //对场景加载完成事件
+        app.on('load', function (ev) {
+            var campus = ev.campus;
+            console.log('after load ' + campus.id);
+            // 切换层级到园区
+            app.level.change(campus);
+
+
+            // 选择所有楼层
+            var objs = app.query('.Floor');
+
+            // 添加缩放
+            objs.on('mouseenter', function (ev) {
+                ev.object.scale = [3, 3, 3];
+                // 查询所有楼层的
+                var selecter = app.query('.Floor');
+                //排除已经点击的
+                var selector = selecter.not(ev.object);
+                //增加透明度
+                selector.style.opacity = 0.5
+            });
+
+            // 还原倍数
+            objs.on('mouseleave', function (ev) {
+                ev.object.scale = [1, 1, 1];
+                // 查询所有楼层的
+                var selecter = app.query('.Floor');
+                //排除已经点击的
+                var selector1 = selecter.not(ev.object);
+                //增加透明度
+                selector1.style.opacity = 1
+            });
+        })
+
+        //添加天空盒
+        app.skyBox = 'Night'
+
+
+        // 环境光对象
+        var ambientLight = {
+            intensity: 0.4,
+            color: '#448cab',
+        };
+        // 半球光照
+        var hemisphereLight = {
+            intensity: 0.2,
+            color: '16777215',
+            groundColor: '2236962',
+        };
+        // 主灯光对象
+        var mainLight = {
+            shadow: false,
+            intensity: 0.5,
+            color: '16777215',
+            alpha: 149,
+            beta: 84,
+        };
+        // 第二光源对象
+        var secondaryLight = {
+            shadow: false,
+            intensity: 0,
+            color: '16777215',
+            alpha: 123,
+            beta: 102,
+        };
+        // 全局配置
+        var config = {
+            showHelper: false,
+            ambientLight,
+            hemisphereLight,
+            mainLight,
+            secondaryLight
+        };
+        app.lighting = config;
+
+
+
+        // 3.添加事件
+        var rain = document.getElementById('rain');
+        console.log(rain);
+        // 监听
+        rain.addEventListener('click', function (ev) {
+            // 触发
+            ranning();
+        })
+
+        var snow = document.getElementById('snow');
+        console.log(snow);
+        // 监听
+        snow.addEventListener('click', function (ev) {
+            // 触发
+            snowing();
+        })
+
+        var fog1 = document.getElementById('fog1');
+        console.log(fog1);
+        // 监听
+        fog1.addEventListener('click', function (ev) {
+            // 触发
+            realling()
+        })
+
+        
+        //下雨
+        function ranning() {
+            var rain = app.query('rain')[0];
+            var snow = app.query('snow')[0];
+            var fog = app.fog
+            console.log(fog)
+            // 销毁snow
+            if (snow) {
+                snow.destroy()
+                //检测下雨了
+                if (!rain) {
+                    // 创建下雨效果
+                    rain = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'rain',
+                        url: 'https://model.3dmomoda.com/models/18112113d4jcj4xcoyxecxehf3zodmvp/0/particles',
+                        position: [0, 30, 0]
+
+                    });
+                    console.log(rain)
+                }
+            } else {
+                //检测下雨了
+                if (!rain) {
+                    // 创建下雨效果
+                    rain = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'rain',
+                        url: 'https://model.3dmomoda.com/models/18112113d4jcj4xcoyxecxehf3zodmvp/0/particles',
+                        position: [0, 30, 0]
+
+                    });
+                    console.log(rain)
+                }
+            }
+
+            // 雾
+            if (fog != null) {
+                // 销毁
+                app.fog = null;
+                //检测下雨了
+                if (!rain) {
+                    // 创建下雨效果
+                    rain = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'rain',
+                        url: 'https://model.3dmomoda.com/models/18112113d4jcj4xcoyxecxehf3zodmvp/0/particles',
+                        position: [0, 30, 0]
+
+                    });
+                    console.log(rain)
+                }
+            } else {
+                //检测下雨了
+                if (!rain) {
+                    // 创建下雨效果
+                    rain = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'rain',
+                        url: 'https://model.3dmomoda.com/models/18112113d4jcj4xcoyxecxehf3zodmvp/0/particles',
+                        position: [0, 30, 0]
+
+                    });
+                    console.log(rain)
+                }
+            }
+        }
+
+
+        //下雪
+        function snowing() {
+            var rain = app.query('rain')[0];
+            var snow = app.query('snow')[0];
+            var fog = app.fog;
+            if (rain) {
+                // 删除
+                rain.destroy();
+                // 创建降雪效果
+                if (!snow) {
+                    snow = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'snow',
+                        url: 'https://model.3dmomoda.com/models/18112014q3t8aunaabahzxbxcochavap/0/particles',
+                        position: [0, 50, 0]
+                    });
+                    console.log(snow);
+                }
+            } else {
+                // 创建降雪效果
+                if (!snow) {
+                    snow = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'snow',
+                        url: 'https://model.3dmomoda.com/models/18112014q3t8aunaabahzxbxcochavap/0/particles',
+                        position: [0, 50, 0]
+                    });
+                    console.log(snow);
+                }
+            }
+
+            //雾
+            if (fog != null) {
+                // 删除
+                app.fog = null;
+                // 创建降雪效果
+                if (!snow) {
+                    snow = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'snow',
+                        url: 'https://model.3dmomoda.com/models/18112014q3t8aunaabahzxbxcochavap/0/particles',
+                        position: [0, 50, 0]
+                    });
+                    console.log(snow);
+                }
+            } else {
+                // 创建降雪效果
+                if (!snow) {
+                    snow = app.create({
+                        type: 'ParticleSystem',
+                        id: 'No1234567',
+                        name: 'snow',
+                        url: 'https://model.3dmomoda.com/models/18112014q3t8aunaabahzxbxcochavap/0/particles',
+                        position: [0, 50, 0]
+                    });
+                    console.log(snow);
+                }
+            }
+        }
+
+        //下雾
+        function realling() {
+            //获取
+            var rain = app.query('rain')[0];
+            var snow = app.query('snow')[0];
+            var fog = app.fog
+            // 判断
+            if (rain) {
+                // 销毁
+                rain.destroy();
+                if (fog == null) {
+                    // 创建
+                    // 雾效果
+                    fog = app.fog = {
+                        color: '14737632',
+                        name: 'fog1',
+                        near: 19,
+                        far: 227
+                    };
+                }
+            } else {
+                if (fog == null) {
+                    // 创建
+                    // 雾效果
+                    fog = app.fog = {
+                        color: '14737632',
+                        name: 'fog1',
+                        near: 19,
+                        far: 227
+                    };
+                }
+            }
+            // 雪
+            if (snow) {
+                //销毁
+                snow.destroy()
+                if (fog == null) {
+                    // 创建
+                    // 雾效果
+                    fog = app.fog = {
+                        color: '14737632',
+                        name: 'fog1',
+                        near: 19,
+                        far: 227
+                    };
+                }
+            } else {
+                if (fog == null) {
+                    // 创建
+                    // 雾效果
+                    fog = app.fog = {
+                        color: '14737632',
+                        name: 'fog1',
+                        near: 19,
+                        far: 227
+                    };
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

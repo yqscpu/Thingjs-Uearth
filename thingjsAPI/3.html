@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人</title>
+    <script src="./js/thingjs.min-V1.2.7.7.js"></script>
+
+</head>
+
+<body>
+    <!-- 容器 -->
+    <div id="3d"></div>
+    <!-- 引用 -->
+    <script>
+        //1.引入一个thingjs本地
+        var app = new THING.App({
+            container: '3d',
+            url: 'https://www.thingjs.com/static/models/storehouse' // 场景地址
+        })
+
+        //定义道路变量
+        var line;
+
+        //加载完成事件 
+        app.on('load', function (ev) {
+            //获取园区的信息
+            var campus = ev.campus;
+            console.log('after load ' + campus.id);
+            // 切换层级到园区
+            app.level.change(campus);
+
+            var currentLevel = app.level.current;
+            console.log(currentLevel.type)
+
+            //查询某一楼层，并为其添加机柜，小白人，道路
+            let fool1 = app.query('353')[0];
+
+
+            // 创建机柜
+            var obj = app.create({
+                type: 'Thing',
+                name: '定制1200深600宽机柜_(能开门）',
+                url: 'https://www.thingjs.com/static/models/cabinets/47f34ce2c5a14b6d8fd4e80974394a55',
+
+                localPosition: [-26, 0, 0],
+                parent: fool1,
+                complete: function () {
+                    console.log('thing created: ' + this.id);
+                }
+            });
+            obj.rotate(-180, [0, 1, 0])
+
+
+            //创建道路
+            line = app.create({
+                type: 'RouteLine',
+                width: 1,
+                parent: fool1,
+
+                style: {
+                    color: '#58DEDE',
+                    image: 'images/diffuse.jpg', // 线路中的纹理资源
+                }
+            });
+            // 启用 UV 动画 默认 false 不启用动画
+            line.scrollUV = true;
+
+            // 创建一个不断直行
+
+            line.addPoint([5.425933361426839, 3.0199999999999945, -7.453748384671753]),
+                line.addPoint([6.12617994594766, 3.020000000000004, -18.3505756228489]),
+                line.addPoint([-25.465606765611874, 3.039999999552965, -17.96222797711313]),
+                line.addPoint([-25.510258178917784, 3.02, -16.696764380980731]);
+
+            // 模型地址
+            var modelUrl = 'https://www.thingjs.com/static/models/ani_gltf';
+
+            var person = app.create({
+                type: 'Thing',
+                url: modelUrl,
+                name: 'people',
+                parent: fool1,
+                localPosition: [5, 0, 8.5],
+
+                complete: function () {
+
+                    var animationNames = person.animationNames;
+                    console.log(animationNames);
+
+                    if (animationNames.length > 0) {
+                        //点击
+                        fool1.on('dblclick', (ev) => {
+                            //显示人物
+                            person.visible = true;
+                            // 播放动画
+                            person.playAnimation({
+                                name: animationNames[2],
+                                loopType: 'repeat'
+                            });
+                            //运动
+                            play();
+                        })
+                    } else {
+                        console.log('该模型无动画');
+                    }
+                }
+            });
+            person.style.color = 'red';
+            //旋转
+            person.rotate(180, [0, 1, 0]);
+        });
+
+
+        // 物体跟随轨迹线运动
+        function play() {
+            var person1 = app.query('.Thing')[10]
+            // console.log(person1)
+
+            //跟随路径移动
+            line.play({
+                time: 1000,
+                complete: function () {
+                    //播放结束后，小车开始移动
+                    person1.movePath({
+                        'path': line.points, // 轨迹路线
+                        'time': 6000, // 移动时间
+                        'orientToPath': true, // 物体移动时沿向路径方向
+                    });
+                }
+            });
+            //执行箱子打开
+            setTimeout(() => {
+                //人物的不奔跑
+                person1.stopAnimation();
+                // 箱子的打开
+                open();
+            }, 7000)
+        }
+
+        //箱子打开方法
+        function open() {
+            //获取箱子
+            var obj = app.query('.Thing')[9];
+            // console.log(obj);
+            obj.playAnimation({
+                name: "open1",
+            });
+        }
+    </script>
+</body>
+
+</html>

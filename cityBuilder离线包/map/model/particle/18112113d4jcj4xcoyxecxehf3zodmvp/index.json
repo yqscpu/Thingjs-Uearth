@@ -1,0 +1,218 @@
+{
+	"strId": "81311ec6-ab20-4da8-a48f-27ad111b92c0",
+	"listGroups": [
+		{
+			"fTrailLife": 0.5,
+			"iMaxParticleCount": 500,
+			"strId": "afbc3d49-941d-435c-9584-ef74e2a63143",
+			"texture": {
+				"iLoop": 1,
+				"name": "path_w_01",
+				"vec2Frames": {
+					"x": 1,
+					"y": 1
+				},
+				"iFrameCount": 1,
+				"url": "/18112113ainmjkaeuoucr1ssexafqsw8.png"
+			},
+			"strIsDepthWrite": "false",
+			"fScale": 684.5,
+			"strUseMesh": "true",
+			"textureTrail": {
+				"iLoop": 1,
+				"name": "32x32_star.png",
+				"vec2Frames": {
+					"x": 1,
+					"y": 1
+				},
+				"iFrameCount": 1,
+				"url": "/18092617nyspq5moaka1i2fhvs1hh66s.png"
+			},
+			"strHasPerspective": "true",
+			"strIsColorize": "true",
+			"iBlendingMode": 1,
+			"strEnableTrail": "false",
+			"strIsTransparent": "true",
+			"fTrailWidthStart": 1,
+			"arrayMeshParams": [
+				1,
+				1,
+				0.01,
+				1,
+				1,
+				1
+			],
+			"strMeshUrl": "BuildIn/Box",
+			"fFixedTimeStep": 0.33,
+			"fAlphaTest": 0,
+			"strIsDepthTest": "false",
+			"listEmitters": [
+				{
+					"strIsLookAtCameraOnlyY": "true",
+					"wiggle": {
+						"fSpread": 0,
+						"fValue": 0
+					},
+					"strId": "1ee62205-72e8-4701-b525-e7c63dd5b9e2",
+					"iDirection": 1,
+					"rotation": {
+						"vec3AxisSpread": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						},
+						"strIsRandomise": "false",
+						"fAngleSpread": 0,
+						"vec3Center": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						},
+						"fAngle": 0,
+						"strIsStatic": "false",
+						"vec3Axis": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						}
+					},
+					"fActiveMultiplier": 1,
+					"velocity": {
+						"strIsRandomise": "false",
+						"vec3Value": {
+							"x": 0,
+							"y": -5,
+							"z": 0
+						},
+						"iDistribution": 1,
+						"vec3Spread": {
+							"x": 0,
+							"y": 5,
+							"z": 0
+						}
+					},
+					"listSize": [
+						{
+							"strIsRandomise": "false",
+							"fSpread": 1.5,
+							"fValue": 1.5
+						}
+					],
+					"acceleration": {
+						"strIsRandomise": "false",
+						"vec3Value": {
+							"x": 0,
+							"y": -50,
+							"z": 0
+						},
+						"iDistribution": 1,
+						"vec3Spread": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						}
+					},
+					"trail": {
+						"fSpread": 0,
+						"fStep": 0,
+						"fStepSpread": 0,
+						"fValue": 0
+					},
+					"maxAge": {
+						"fSpread": 1,
+						"fValue": 1
+					},
+					"listAngle": [
+						{
+							"strIsRandomise": "false",
+							"fSpread": 0,
+							"fValue": 0
+						}
+					],
+					"fDuration": -1,
+					"listColor": [
+						{
+							"strIsRandomise": "false",
+							"vec3Value": {
+								"x": 1,
+								"y": 1,
+								"z": 1
+							},
+							"vec3Spread": {
+								"x": 0,
+								"y": 0,
+								"z": 0
+							}
+						}
+					],
+					"strIsStatic": "false",
+					"position": {
+						"strIsRandomise": "false",
+						"fRadius": 0,
+						"vec3SpreadClamp": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						},
+						"vec3Value": {
+							"x": 0,
+							"y": 0,
+							"z": 0
+						},
+						"vec3RadiusScale": {
+							"x": 1,
+							"y": 1,
+							"z": 1
+						},
+						"iDistribution": 1,
+						"vec3Spread": {
+							"x": 60,
+							"y": 0,
+							"z": 60
+						}
+					},
+					"drag": {
+						"strIsRandomise": "false",
+						"fSpread": 0,
+						"fValue": 0
+					},
+					"iDistribution": 1,
+					"iParticleCount": 100,
+					"listOpacity": [
+						{
+							"strIsRandomise": "false",
+							"fSpread": 0,
+							"fValue": 0
+						},
+						{
+							"strIsRandomise": "false",
+							"fSpread": 0.3,
+							"fValue": 0.7000000000000001
+						},
+						{
+							"strIsRandomise": "false",
+							"fSpread": 0.3,
+							"fValue": 0.7000000000000001
+						},
+						{
+							"strIsRandomise": "false",
+							"fSpread": 0.3,
+							"fValue": 0.7000000000000001
+						}
+					],
+					"strIsLookAtCamera": "false"
+				}
+			],
+			"strIsFog": "false",
+			"fTrailWidthEnd": 1,
+			"vec4Quaternion": {
+				"x": 0,
+				"y": 0,
+				"z": 0,
+				"w": 1
+			}
+		}
+	],
+	"_attr": "ParticleData",
+	"fPPAfterImageValue": 0
+}

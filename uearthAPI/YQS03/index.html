@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建</title>
+
+    <!-- 引包 -->
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/uearth.min.v1.7.8.5.js"></script>
+    <script src="../js/jquery-1.12.4.js"></script>
+    <!-- 样式 -->
+    <style>
+        button {
+            width: 100px;
+            height: 60px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div3d"></div>
+    <!-- 按钮 -->
+    <button id="create">创建</button>
+
+    <!-- 代码 -->
+    <script>
+        window.onload = function () {
+            var app = new THING.App({
+                container: 'div3d'
+            });
+
+            var map = app.create({
+                type: 'Map',
+                url: './map/map.json',
+                resourceConfig: {
+                    resourcePrefix: './map', // 资源路径前缀
+                    baseLayerUrls: [
+                        'https://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}'
+                    ], // 瓦片图层
+                },
+                complete: function (event) {
+                    console.log(event.object.userLayers.length);
+                }
+            });
+            app.one(THING.EventType.CameraChangeEnd, () => {
+                setTimeout(() => {
+                    // 清除矢量球
+                    const ball = app.query('#vectorBaseLayer')[0];
+                    if (ball) ball.destroy();
+                }, 500);
+            });
+
+            // 创建一个 ThingLayer
+            var thingLayer = app.create({
+                type: "ThingLayer",
+                name: "thingLayer01"
+            });
+            // 将ThingLayer添加到地图中
+            map.addLayer(thingLayer);
+
+            // 3.添加事件
+            var create = document.getElementById('create');
+            console.log(create);
+            // 监听
+            create.addEventListener('click', function (ev) {
+                // 触发
+                penla();
+                penl1();
+                penl2();
+            })
+
+
+
+            //封装一个函数
+            function penla() {
+                //创建
+                var geoPoint = thingLayer.query('北京世纪酒店')[0];
+                //没有
+                if (!geoPoint) {
+                    var geoPoint = app.create({
+                        type: 'GeoPoint',
+                        name: '北京世纪酒店',
+                        userData: {
+                            '类别': '酒店'
+                        },
+                        coordinates: [116.31903648376465, 39.89775286048808],
+                        renderer: {
+                            type: 'image',
+                            url: 'https://www.thingjs.com/static/image/train_station.png', // 图片 url
+                            size: 16, // 缩放比例
+                        },
+                    });
+                    //加入
+                    thingLayer.add(geoPoint);
+
+                    //点击切换摄像头
+                    geoPoint.on('click', () => {
+                        app.camera.earthFlyTo({
+                            //时间
+                            time: 3000,
+                            lonlat: [116.31903648376465, 39.89775286048808],
+                            height: 1500,
+                            // 模板方法
+                            complete: () => {
+                                //加载2d板子
+                                test_create_ui()
+                            }
+                        })
+                    })
+                } else {
+                    // 删除图层
+                    map.removeLayer(thingLayer);
+                }
+
+                //console.log(geoPoint);
+
+                //自定义模板
+                function create_html() {
+                    var penl =
+                        `<div class="sign" id="board" style="font-size: 12px;width: 474px; position: absolute; top: 0; left: 0; z-index: 10;display: none;">
+			                <div style="float: left;height: 74px; width: 474px; background: url(\'http://www.thingjs.com/uearth/uEarthjs/temp_resource/billboard_white.png\')">
+                                <div style="position: absolute; line-height:15px;top: 11px; bottom: 0px; left: 16px; color: white;">
+                                    <span style="font-size: 14px;color:#1f3a54">北京世纪酒店</span><br/>
+                                    <span style="font-size: 12px;color:#1f3a54;opacity:0.6">世纪酒店</span>
+                                </div>
+                            <div>
+                        </div>`
+                    $('#div3d').append($(penl));
+                }
+
+                create_html();
+
+                // 生成一个新面板
+                function create_element() {
+                    var srcElem = document.getElementById('board');
+                    var newElem = srcElem.cloneNode(true);
+                    newElem.style.display = "block";
+                    app.domElement.insertBefore(newElem, srcElem);
+                    return newElem;
+                }
+
+                // 物体顶界面
+                var ui = null;
+
+                function test_create_ui() {
+                    ui = app.create({
+                        type: 'UIAnchor',
+                        parent: geoPoint,
+                        element: create_element(),
+                        localPosition: [0, 2, 0],
+                        pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+                    });
+                }
+            };
+
+            //封装2
+            function penl1() {
+                //创建
+                var geoPoint1 = thingLayer.query('便利超市')[0];
+                //没有
+                if (!geoPoint1) {
+                    geoPoint1 = app.create({
+                        type: 'GeoPoint',
+                        name: '便利超市',
+                        height: 100,
+                        coordinates: [116.32605314254761, 39.89340672350553],
+                        //渲染
+                        renderer: {
+                            type: 'vector',
+                            vectorType: 'rectangle', // 矢量符号形状 circle(圆形),triangle(三角形),rectangle(正方形),cross(十字)
+                            color: [200, 0, 0], // 矢量符号填充色
+                            opacity: 0.5, // 符号不透明度
+                            lineColor: [255, 255, 0], // 描边颜色
+                            lineOpacity: 0.8, // 描边透明度
+                            lineWidth: 2, // 描边宽度
+                            keepSize: false, // 符号近大远小
+                            size: 250, // 缩放比例
+                        }
+                    })
+                    thingLayer.add(geoPoint1);
+
+                    //摄影机飞行
+                    geoPoint1.on('click', () => {
+                        app.camera.earthFlyTo({
+                            time: 3000,
+                            lonlat: [116.32605314254761, 39.89340672350553],
+                            height: 1500,
+                            complete: () => {
+                                //板子
+                                test()
+                            }
+                        })
+                    });
+                    //console.log(geoPoint1);
+
+                } else {
+                    //geoPoint1.destroy();
+                    map.removeLayer(thingLayer);
+                }
+
+                //自定义模板
+                function create() {
+                    var penlb =
+                        `<div class="sign" id="board1" style="font-size: 12px;width: 474px; position: absolute; top: 0; left: 0; z-index: 10;display: none;">
+			                <div style="float: left;height: 74px; width: 474px; background: url(\'http://www.thingjs.com/uearth/uEarthjs/temp_resource/billboard_white.png\')">
+                                <div style="position: absolute; line-height:15px;top: 11px; bottom: 0px; left: 16px; color: white;">
+                                    <span style="font-size: 14px;color:#1f3a54">便利超市</span><br/>
+                                    <span style="font-size: 12px;color:#1f3a54;opacity:0.6">超市</span>
+                                </div>
+                            <div>
+                        </div>`
+                    $('#div3d').append($(penlb));
+                }
+
+                create();
+
+                // 生成一个新面板
+                function create_el() {
+                    var srcElem = document.getElementById('board1');
+                    var newElem = srcElem.cloneNode(true);
+                    newElem.style.display = "block";
+                    app.domElement.insertBefore(newElem, srcElem);
+                    return newElem;
+                }
+
+                // 物体顶界面
+                var ui = null;
+
+                function test() {
+                    ui = app.create({
+                        type: 'UIAnchor',
+                        parent: geoPoint1,
+                        element: create_el(),
+                        localPosition: [0, 2, 0],
+                        pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+                    });
+                }
+            }
+
+            //模型
+            function penl2() {
+                //创建
+                var geoPoint2 = thingLayer.query('北京交通信息管理局')[0];
+                //没有
+                if (!geoPoint2) {
+                    geoPoint2 = app.create({
+                        type: 'GeoPoint',
+                        name: '北京交通信息管理局',
+                        height: 100,
+                        coordinates: [116.32607460021971, 39.88711750708241],
+                        //渲染
+                        renderer: {
+                            type: 'model', // model 代表使用模型
+					        url: 'https://www.thingjs.com/api/models/0667E623DA1B42788C5435D8076041CF/0/gltf/', // 模型地址
+					        size: 20 // 缩放比例
+                        }
+                    })
+                    thingLayer.add(geoPoint2);
+
+                    //摄影机飞行
+                    geoPoint2.on('click', () => {
+                        app.camera.earthFlyTo({
+                            time: 3000,
+                            lonlat: [116.32607460021971, 39.88711750708241],
+                            height: 1500,
+                            complete: () => {
+                                //板子
+                                test3()
+                            }
+                        })
+                    });
+                    //console.log(geoPoint1);
+
+                } else {
+                    //geoPoint2.destroy();
+                    map.removeLayer(thingLayer);
+                }
+
+                //自定义模板
+                function create3() {
+                    var penlc =
+                        `<div class="sign" id="board3" style="font-size: 12px;width: 474px; position: absolute; top: 0; left: 0; z-index: 10;display: none;">
+			                <div style="float: left;height: 74px; width: 474px; background: url(\'http://www.thingjs.com/uearth/uEarthjs/temp_resource/billboard_white.png\')">
+                                <div style="position: absolute; line-height:15px;top: 11px; bottom: 0px; left: 16px; color: white;">
+                                    <span style="font-size: 14px;color:#1f3a54">北京交通信息管理局</span><br/>
+                                    <span style="font-size: 12px;color:#1f3a54;opacity:0.6">管理局</span>
+                                </div>
+                            <div>
+                        </div>`
+                    $('#div3d').append($(penlc));
+                }
+
+                create3();
+
+                // 生成一个新面板
+                function create_el3() {
+                    var srcElem = document.getElementById('board3');
+                    var newElem = srcElem.cloneNode(true);
+                    newElem.style.display = "block";
+                    app.domElement.insertBefore(newElem, srcElem);
+                    return newElem;
+                }
+
+                // 物体顶界面
+                var ui = null;
+
+                function test3() {
+                    ui = app.create({
+                        type: 'UIAnchor',
+                        parent: geoPoint2,
+                        element: create_el3(),
+                        localPosition: [0, 2, 0],
+                        pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

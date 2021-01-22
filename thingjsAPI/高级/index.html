@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摄像机飞行</title>
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/jquery-1.12.4.js"></script>
+    <style>
+        button {
+            width: 120px;
+            height: 50px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+        }
+
+        button:nth-child(2) {
+            top: 56px;
+        }
+
+        button:nth-child(3) {
+            top: 98px;
+        }
+
+        button:nth-child(4) {
+            top: 145px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- 容器 -->
+    <div id="div3d"></div>
+    <!-- 按钮 -->
+    <button id="two">摄像头A004</button>
+    <button id="three">摄像头A002</button>
+    <button id="four">摄像头A003</button>
+    <button id="one">摄像头A001</button>
+    <!-- 引用 -->
+    <script>
+        //1.引入一个thingjs本地
+        var app = new THING.App({
+            container: 'div3d',
+            url: 'https://www.thingjs.com/static/models/storehouse' // 场景地址
+        })
+        //对场景加载完成事件
+        app.on('load', function (ev) {
+            var campus = ev.campus;
+            console.log('after load ' + campus.id);
+            // 切换层级到园区
+            app.level.change(campus);
+
+
+            // 获取点击坐标
+            app.on('click', (ev) => {
+                console.log(ev.pickedPosition)
+            })
+
+
+            // 创建Thing1
+            var obj1 = app.create({
+                type: 'Thing',
+                name: '球型监控摄像头1',
+                url: 'https://www.thingjs.com/api/models/62A8A75C75044E6AB3D8463FA0CB67AF/0/gltf/',
+                position: [-20.009000114440926, 2.439333121181944, 12.536269020719665],
+                angle: 0,
+                complete: function () {
+                    console.log('thing created: ' + this.id);
+                }
+            });
+            obj1.rotate(90, [0, 1, 0])
+
+
+            // 创建Thing4
+            var obj2 = app.create({
+                type: 'Thing',
+                name: '球型监控摄像头4',
+                url: 'https://www.thingjs.com/api/models/62A8A75C75044E6AB3D8463FA0CB67AF/0/gltf/',
+                position: [-30.31200008773804, 2.410745515033817, 1.2079311259682406],
+                angle: 0,
+                complete: function () {
+                    console.log('thing created: ' + this.id);
+                }
+            });
+            obj2.rotate(0, [0, 1, 0])
+
+            // 创建Thing2
+            var obj3 = app.create({
+                type: 'Thing',
+                name: '球型监控摄像头2',
+                url: 'https://www.thingjs.com/api/models/62A8A75C75044E6AB3D8463FA0CB67AF/0/gltf/',
+                position: [-22.450999801635742, 5.668339087369845, -13.486030749010121],
+                angle: 0,
+                complete: function () {
+                    console.log('thing created: ' + this.id);
+                }
+            });
+            obj3.rotate(0, [0, 1, 0])
+
+            // 创建Thing3
+            var obj4 = app.create({
+                type: 'Thing',
+                name: '球型监控摄像头3',
+                url: 'https://www.thingjs.com/api/models/62A8A75C75044E6AB3D8463FA0CB67AF/0/gltf/',
+                position: [-22.241205409280948, 5.642958200969619, -30.379000091552733],
+                angle: 0,
+                complete: function () {
+                    console.log('thing created: ' + this.id);
+                }
+            });
+            obj4.rotate(0, [0, 1, 0])
+
+
+            // 查找 
+            // 3.添加事件
+            var one = document.getElementById('one');
+            console.log(one);
+            // 监听
+            one.addEventListener('click', function (ev) {
+                // 触发
+                // 返回上一级
+                app.level.back();
+
+                app.camera.flyTo({
+                    target: [-20.009000114440926, 2.439333121181944,
+                        12.536269020719665
+                    ], // 飞行到的位置
+                    xAngle: 0,
+                    yAngle: 90,
+                    radiusFactor: 2,
+                    time: 2 * 1000, // 飞行时间
+                    complete: function () {
+                        
+                    // 删除之前
+                    delete_element1();
+                    delete_element3();
+                    delete_element4();
+
+                    //createPanel(name, adress,obj1);
+                    test_create_ui(obj1)
+                    //打印
+                    obj1.style.outlineColor = 'yellow';
+                    obj2.style.outlineColor = null;
+                    obj3.style.outlineColor = null;
+                    obj4.style.outlineColor = null;
+                    }
+                });
+            })
+
+            //TODO：2
+            var two = document.getElementById('two');
+            //console.log(two);
+
+            // 监听
+            two.addEventListener('click', function (ev) {
+                // 触发
+                // 将层级切换至某楼层
+                var floor = app.query('6924')[0];
+                app.level.change(floor);
+
+                // 摄像机飞行
+                app.camera.flyTo({
+                    target: [-30.31200008773804, 2.7910745515033817, 1.2079311259682406],
+                    xAngle: 45, // 绕物体自身X轴旋转角度
+                    yAngle: 45,
+                    radius: 2,
+                    time: 2 * 1000,
+                    complete: function () {
+
+                        // 删除之前
+                        delete_element()
+                        delete_element3();
+                        delete_element4();
+                        //createPanel(name, adress);
+                        test_create_ui1(obj2)
+
+                        obj2.style.outlineColor = 'blue';
+                        obj1.style.outlineColor = null
+                        obj3.style.outlineColor = null;
+                        obj4.style.outlineColor = null;
+                        //打印
+                        console.log("飞行结束");
+                    }
+                });
+            })
+
+
+            //TODO:3
+            var three = document.getElementById('three');
+            console.log(three);
+            // 监听
+            three.addEventListener('click', function (ev) {
+                // 触发
+                // 将层级切换至某楼层
+                var campus = app.query('Campus')[0];
+                app.level.change(campus);
+
+                var floor1 = app.query('353')[0];
+                app.level.change(floor1);
+                //摄影机
+                app.camera.flyTo({
+                    target: [-22.450999801635742, 5.668339087369845, -13.486030749010121],
+                    // 绕物体自身X轴旋转角度
+                    xAngle: 3,
+                    yAngle: 80,
+                    // 物体包围盒半径的倍数
+                    radius: 4,
+                    time: 3 * 1000,
+
+                    complete: function () {
+                        //删除4
+                        delete_element4();
+                        delete_element();
+                        delete_element1();
+
+                        obj1.style.outlineColor = null;
+                        obj4.style.outlineColor = null;                      
+                        obj2.style.outlineColor = null;
+
+                        setTimeout(() => {
+                            //创建
+                            test_create_ui3(obj3)
+
+                            obj3.style.outlineColor = 'red';
+                            //打印
+                            console.log('成功');
+                        }, 1000)
+                    }
+                });
+            })
+
+
+
+            //TODO:4
+            var four = document.getElementById('four');
+            console.log(four);
+            // 监听
+            four.addEventListener('click', function (ev) {
+                // 触发
+                var floor1 = app.query('353')[0];
+                app.level.change(floor1);
+                //摄影机飞行
+                app.camera.flyTo({
+                    target: [-22.241205409280948, 5.842958200969619, -30.379000091552733],
+                    xAngle: 2,
+                    yAngle: 10,
+                    radius: 10,
+                    time: 2 * 1000,
+                    complete: function () {
+                        //删除3
+                        delete_element3();
+                        delete_element();
+                        delete_element1();
+                        
+                        obj1.style.outlineColor = null;
+                        obj2.style.outlineColor = null;                      
+                        obj3.style.outlineColor = null;
+                        
+                        test_create_ui4(obj4)
+                        // 沟边
+                        obj4.style.outlineColor = 'green';
+                        console.log("飞行结束");
+                    }
+                });
+            })
+        })
+
+        //添加天空盒
+        app.skyBox = 'Night'
+
+
+
+        //生成界面1
+        function create_html() {
+            var template =
+                `<div class="template" id="board" style="font-size: 12px;width: 180px; height:150px; text-align: center;background-color: rgba(0, 0, 0, .6);border: 3px solid #eeeeee;border-radius: 8px;color: #eee;position: absolute;top: 0;left: 0;z-index: 10;display: none;">
+			<div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">设备名称</span>
+				<span class="span-r point" style="width: 12px;height: 12px;margin: 10px 5px 10px 0px;">摄像头A001</span>
+			</div>
+            <div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">生产厂家</span>
+				<span class="span-r point" style="width: 12px;height: 12px;margin: 10px 5px 10px 0px;">海康</span>
+			</div>
+			<div class="s2" style="margin: 5px 0px 10px 0px;line-height: 18px;font-size: 10px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 10px 0px 3px;">所在位置</span>
+				<span class="span-l font2" style="float: left;width: 70px; margin-left:10px;">园区</span>
+			</div>
+			<div class="point-top" style="position: absolute;top: -7px;right: -7px;width: 10px;height: 10px;border: 3px solid #eee;"></div>
+		</div>`;
+            $('#div3d').append($(template));
+        }
+        create_html();
+
+        // 生成一个新面板
+        function create_element() {
+            var srcElem = document.getElementById('board');
+            var newElem = srcElem.cloneNode(true);
+            newElem.style.display = "block";
+            app.domElement.insertBefore(newElem, srcElem);
+            return newElem;
+        }
+
+        //创建2d界面
+        function test_create_ui(obj) {
+            app.create({
+                type: 'UIAnchor',
+                parent: obj,
+                element: create_element(),
+                localPosition: [0, 1, 0],
+                pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+            })
+        }
+
+        //删除面板1
+        function delete_element() {
+            var srcElem = document.getElementById('board');
+            srcElem.style.display = "none";
+        }
+
+
+
+        //生成界面2
+        function create_html1() {
+            var template =
+                `<div class="template" id="board1" style="font-size: 12px;width: 180px;text-align: center;background-color: rgba(0, 0, 0, .6);border: 3px solid #eeeeee;border-radius: 8px;color: #eee;position: absolute;top: 0;left: 0;z-index: 10;display: none;">
+			<div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">设备名称</span>
+				<span class="span-r point" style="width: 12px;height: 12px;margin: 10px 5px 10px 0px;">摄像头A004</span>
+			</div>
+            <div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">生产厂家</span>
+				<span class="span-r point" style="width: 15px;height: 12px;margin: 10px 5px 10px 0px;">海康</span>
+			</div>
+			<div class="s2" style="margin: 5px 0px 10px 0px;line-height: 18px;font-size: 10px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 10px 0px 3px;">所在位置</span>
+				<span class="span-l font2" style="float: left;width: 70px; margin-left:10px;">B建筑1F</span>
+			</div>
+			<div class="point-top" style="position: absolute;top: -7px;right: -7px;width: 10px;height: 10px;border: 3px solid #eee;"></div>
+		</div>`;
+            $('#div3d').append($(template));
+        }
+        create_html1();
+
+        // 生成一个新面板
+        function create_element1() {
+            var srcElem = document.getElementById('board1');
+            var newElem = srcElem.cloneNode(true);
+            newElem.style.display = "block";
+            app.domElement.insertBefore(newElem, srcElem);
+            return newElem;
+        }
+
+        //创建2d界面
+        function test_create_ui1(obj) {
+            app.create({
+                type: 'UIAnchor',
+                parent: obj,
+                element: create_element1(),
+                localPosition: [0, 1, 0],
+                pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+            })
+        }
+
+        //删除面板2
+        function delete_element1() {
+            var srcElem = document.getElementById('board1');
+            srcElem.style.display = "none";
+        }
+
+
+        //生成界面3
+        function create_html3() {
+            var template =
+                `<div class="template" id="board3" style="font-size: 12px;width: 180px;text-align: center;background-color: rgba(0, 0, 0, .6);border: 3px solid #eeeeee;border-radius: 8px;color: #eee;position: absolute;top: 0;left: 0;z-index: 10;display: none;">
+			<div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">设备名称</span>
+				<span class="span-r point" style="width: 12px;height: 12px;margin: 10px 5px 10px 0px;">摄像头A002</span>
+			</div>
+            <div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">生产厂家</span>
+				<span class="span-r point" style="width: 15px;height: 12px;margin: 10px 5px 10px 0px;">康达</span>
+			</div>
+			<div class="s2" style="margin: 5px 0px 10px 0px;line-height: 18px;font-size: 10px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 10px 0px 3px;">所在位置</span>
+				<span class="span-l font2" style="float: left;width: 70px; margin-left:10px;">A建筑2F</span>
+			</div>
+			<div class="point-top" style="position: absolute;top: -7px;right: -7px;width: 10px;height: 10px;border: 3px solid #eee;"></div>
+		</div>`;
+            $('#div3d').append($(template));
+        }
+        create_html3();
+
+        // 生成一个新面板
+        function create_element3() {
+            var srcElem = document.getElementById('board3');
+            var newElem = srcElem.cloneNode(true);
+            newElem.style.display = "block";
+            app.domElement.insertBefore(newElem, srcElem);
+            return newElem;
+        }
+
+        //创建2d界面
+        function test_create_ui3(obj) {
+            app.create({
+                type: 'UIAnchor',
+                parent: obj,
+                element: create_element3(),
+                localPosition: [0, 1, 0],
+                pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+            })
+        }
+
+        //删除面板2
+        function delete_element3() {
+            var srcElem = document.getElementById('board3');
+            srcElem.style.display = "none";
+        }
+
+
+
+        //4.
+        //生成界面4
+        function create_html4() {
+            var template =
+                `<div class="template" id="board4" style="font-size: 12px;width: 180px;text-align: center;background-color: rgba(0, 0, 0, .6);border: 3px solid #eeeeee;border-radius: 8px;color: #eee;position: absolute;top: 0;left: 0;z-index: 10;display: none;">
+			<div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">设备名称</span>
+				<span class="span-r point" style="width: 12px;height: 12px;margin: 10px 5px 10px 0px;">摄像头A003</span>
+			</div>
+            <div class="s1" style="margin: 5px 0px 5px 0px;line-height: 32px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 0px 0px 3px;">生产厂家</span>
+				<span class="span-r point" style="width: 15px;height: 12px;margin: 10px 5px 10px 0px;">海康</span>
+			</div>
+			<div class="s2" style="margin: 5px 0px 10px 0px;line-height: 18px;font-size: 10px;overflow: hidden;">
+				<span class="span-l font" style="float: left;margin: 0px 10px 0px 3px;">所在位置</span>
+				<span class="span-l font2" style="float: left;width: 70px; margin-left:10px;">A建筑2F</span>
+			</div>
+			<div class="point-top" style="position: absolute;top: -7px;right: -7px;width: 10px;height: 10px;border: 3px solid #eee;"></div>
+		</div>`;
+            $('#div3d').append($(template));
+        }
+        create_html4();
+
+        // 生成一个新面板
+        function create_element4() {
+            var srcElem = document.getElementById('board4');
+            var newElem = srcElem.cloneNode(true);
+            newElem.style.display = "block";
+            app.domElement.insertBefore(newElem, srcElem);
+            return newElem;
+        }
+
+        //创建2d界面
+        function test_create_ui4(obj) {
+            app.create({
+                type: 'UIAnchor',
+                parent: obj,
+                element: create_element4(),
+                localPosition: [0, 1, 0],
+                pivot: [0.5, 1] //  [0,0]即以界面左上角定位，[1,1]即以界面右下角进行定位
+            })
+        }
+
+        //删除面板2
+        function delete_element4() {
+            var srcElem = document.getElementById('board4');
+            srcElem.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

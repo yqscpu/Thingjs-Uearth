@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>楼层</title>
+    <!-- 引入js文件 -->
+    <script src="./js/thingjs.min-V1.2.7.7.js"></script>
+</head>
+<body>
+    <!-- 容器 -->
+    <div id="3d"></div>
+
+    <!-- 引用 -->
+    <script>
+        var app = new THING.App({
+            container:'3d',
+            loaderResourceUrl:'',
+            url:'../campuer'
+        })
+        
+    // 加载完成事件 
+    app.on('load', function (ev) {
+        //获取园区    
+        var campus=ev.campus;
+        console.log('after load '+campus.id); 
+        // 切换层级到园区
+        app.level.change(campus);
+    });
+    </script>
+</body>
+</html>

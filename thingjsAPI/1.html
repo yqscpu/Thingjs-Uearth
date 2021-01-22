@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试</title>
+    <script src="./js/thingjs.min-V1.2.7.7.js"></script>
+
+</head>
+
+<body>
+    <!-- 容器 -->
+    <div id="3d"></div>
+
+    <!-- 引用 -->
+    <script>
+        //1.引入一个thingjs本地
+        var app = new THING.App({
+            container: '3d',
+            url: 'https://www.thingjs.com/static/models/storehouse' // 场景地址
+        })
+        
+        // 加载完成事件 
+        app.on('load', function (ev) {
+            var campus = ev.campus;
+            console.log('after load ' + campus.id);
+            // 切换层级到园区
+            app.level.change(campus);
+
+
+            //2.1 打印所有的建筑物
+            var objs = app.query('.Building');
+            // 建筑物
+            console.log('建筑物对象的名字--------');
+            // 遍历
+            for(let i=0;i<objs.length;i++){
+                console.log(objs[i]._name)
+            }
+           
+            //2.2 查询指定thing物体 
+            var objs1 = app.query('.Thing');
+            //遍历
+            console.log('查询指定thing物体的uuid');
+            for(let i=0 ;i<objs1.length;i++){
+                console.log(objs1[i].uuid)
+            }
+
+            //2.3 第二个建筑下所有楼层对象
+            var objs2 = app.query('.Building')[1];
+            console.log('第二建筑物下所有楼层--------');
+            console.log(objs2)
+
+            //2.4正则表达式
+            var objs3 = app.query(/car/);
+            console.log('正则所有卡车--------');
+            //遍历
+            for(let i=0 ;i<objs3.length;i++){
+                console.log(objs3[i].name)
+            }
+
+            //2.5leavel>1
+            var objs4 = app.query('.Building')[0].query('[levelNum>1]');
+            //遍历
+            console.log('建筑层级>1的名字--------');
+            for(let i=0 ;i<objs4.length;i++){
+                console.log(objs4[i].name)
+            }
+
+            //2.6某一楼层中name包含cabint的物体
+            var objs5 = app.query('.Floor')[0].query(/cabinet/);
+            //遍历
+            console.log('某一楼层中name包含cabint的物体--------');
+            for(let i=0 ;i<objs5.length;i++){
+                console.log(objs5[i].name)
+            }  
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光栅</title>
+    <!-- 引包 -->
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/uearth.min.v1.7.8.5.js"></script>
+    <!-- 样式 -->
+    <style>
+        button {
+            width: 120px;
+            height: 60px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div3d"></div>
+    <!-- 按钮 -->
+    <button id="created">光栅操作</button>
+    <!-- 操作 -->
+    <script>
+        window.onload = function () {
+            //创建地图图层
+            var app = new THING.App();
+            app.background = [0, 0, 0];
+            //创建地图
+            var map = app.create({
+                type: 'Map',
+                attribution: 'GaoDe',
+                style: {
+                    night: false
+                }
+            });
+            //创建瓦片
+            var tileLayer1 = app.create({
+                type: 'TileLayer',
+                name: '卫星影像图层',
+                url: 'http://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+                // 增加滤镜
+                style: {
+                    template: CMAP.TileLayerStyle.DARKBLUE
+                }
+            })
+            map.addLayer(tileLayer1);
+
+            //摄像头飞行
+            app.camera.earthFlyTo({
+                time: 3000,
+                lonlat: [116.45987123250963, 39.98310099140805],
+                height: 1500
+            });
+
+            //新建图层
+            var thingLayer = app.create({
+                type: 'ThingLayer',
+                name: 'thingLayer01'
+            });
+            map.addLayer(thingLayer);
+
+            // 3.添加事件
+            var created = document.getElementById('created');
+            console.log(created);
+            // 监听
+            created.addEventListener('click', function (ev) {
+                // 触发
+                grating();
+            })
+
+            // 创建光栅函数
+            function grating() {
+                //存在与否
+                var geoBoundary = thingLayer.query('.BaseObject')[0];
+                if (!geoBoundary) {
+                    //创建
+                    geoBoundary = CMAP.Util._createGeoBoundary({
+                        //坐标
+                        coordinates: [
+                            [116.45987123250963, 39.98310099140805],
+                            [116.45712733268736, 39.98492187410472],
+                            [116.45771205425262, 39.98528357865959],
+                            [116.4582860469818, 39.985702824724704],
+                            [116.45957887172698, 39.98692972122187],
+                            [116.46279484033585, 39.98480267559324],
+                            [116.46120429039001, 39.98333528377564],
+                            [116.46093875169754, 39.98319553053025],
+                            [116.46078854799269, 39.983158536976276],
+                            [116.4604103565216, 39.98307632900681],
+                            [116.46008312702179, 39.98303316978326],
+                            [116.45992755889893, 39.98307632900681],
+                            [116.45987123250963, 39.98310099140805]
+                        ],
+                        type: 'vertical',
+                        //高度
+                        extrudeHeight: 400,
+                        blending: true,
+                        // 贴图流动的速度
+                        scrollSpeed: 0.5,
+                        //垂直
+                        alpha: 1,
+                        //贴图(垂直，水平)
+                        wallImage: './image/g_1_w_2.png',
+                        alphaImage: './image/icon.png',
+                        //透明图流动的速度
+                        alphaSpeed: 1.5,
+
+                        isBoundary: true,
+                        lineCount: 6,
+                        //回调
+                        complete() {
+                            //打印
+                            console.log('创建成功')
+                        }
+                    });
+                    thingLayer.add(geoBoundary);
+                } else {
+                    // 删除图层
+                    map.removeLayer(thingLayer);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

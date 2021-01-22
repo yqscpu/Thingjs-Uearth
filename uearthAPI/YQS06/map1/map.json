@@ -1,0 +1,218 @@
+{
+   "data": {
+      "postEffect": [{
+         "postEffect": {
+            "enable": true,
+            "bloom": {
+               "enable": false,
+               "strength": 0.14,
+               "radius": 0.4,
+               "threshold": 0.7
+            },
+            "screenSpaceAmbientOcclusion": {
+               "enable": false,
+               "radius": 0.2,
+               "quality": "medium",
+               "intensity": 0.8,
+               "temporalFilter": true,
+               "ignoreTransparent": false
+            },
+            "colorCorrection": {
+               "enable": true,
+               "exposure": 0,
+               "brightness": 0,
+               "contrast": 1.1,
+               "saturation": 1.1,
+               "gamma": 1
+            },
+            "FXAA": {
+               "enable": false
+            },
+            "SmallGlowBloom": {
+               "enable": false,
+               "strength": 1.5,
+               "radius": 0.4,
+               "threshold": 0.2
+            },
+            "GlowBloom": {
+               "enable": false,
+               "strength": 0.52,
+               "radius": 0.4,
+               "threshold": 0.2
+            },
+            "MiddleGlowBloom": {
+               "enable": false,
+               "strength": 1.5,
+               "radius": 0.4,
+               "threshold": 0.2
+            },
+            "vignette": {
+               "enable": false,
+               "type": "blur",
+               "color": "0",
+               "offset": 1.5
+            },
+            "film": {
+               "enable": false,
+               "grayscale": false,
+               "noiseIntensity": 0.35,
+               "scanlinesIntensity": 0,
+               "scanlinesCount": 2048
+            },
+            "chromaticAberration": {
+               "enable": false,
+               "chromaFactor": 2
+            }
+         }
+      }, {
+      }],
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiIxNTE4Mjc5ODYwMyIsInJvbGVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sInNvdXJjZSI6MSwibW1kSWQiOjIwODEzOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImNsaWVudF9pZCI6InRoaW5nanMiLCJ3ZWl4aW4iOm51bGwsInBob25lIjoiMTUxODI3OTg2MDMiLCJzY29wZSI6WyJ1c2VyX2luZm8iXSwibmFtZSI6bnVsbCwiaWQiOiIyMDEyMjgxMWg0aDNlZXltIiwiZXhwIjoxNjExMDU1MjQ2LCJqdGkiOiJhNzVhZjczZi0zY2ViLTQ5NzctOWYzYi1lODAzYWJiYTJlNmYiLCJlbWFpbCI6InJlZ19kZWZhdXRfNzk4Nzk1MzNAdGhpbmdqcy5jb20iLCJ1c2VybmFtZSI6IjE1MTgyNzk4NjAzIn0.WcADKue5IkA3AjlGsbsEZO4VP4rD69CQnrvixZx7dUg",
+      "terrainUrl": "",
+      "isProxima": true,
+      "cameraFlyTo": {
+         "heading": -0.04445,
+         "angle": 0,
+         "pitch": 45.00114,
+         "time": 2000.0,
+         "lonlat": [118.77662, 32.05402, -0.027971463277935982],
+         "height": 2819.20613
+      },
+      "light": [{
+         "showHelper": false,
+         "ambientLight": {
+            "intensity": 0.4,
+            "color": 16777215
+         },
+         "hemisphereLight": {
+            "intensity": 0,
+            "color": 16777215,
+            "groundColor": 2236962
+         },
+         "mainLight": {
+            "shadow": false,
+            "shadowQuality": "ultra",
+            "shadowBias": 0,
+            "intensity": 0.5,
+            "color": 16777215,
+            "alpha": 30,
+            "beta": 30
+         },
+         "secondaryLight": {
+            "shadow": false,
+            "shadowQuality": "ultra",
+            "shadowBias": 0,
+            "intensity": 0,
+            "color": 16777215,
+            "alpha": 138,
+            "beta": 0
+         },
+         "tertiaryLight": {
+            "shadow": false,
+            "shadowQuality": "ultra",
+            "shadowBias": 0,
+            "intensity": 0,
+            "color": 16777215,
+            "alpha": 0,
+            "beta": 0
+         },
+         "distance": 2000,
+         "position": [2605361.51, 3384796.12, 4736467.27]
+      }, {
+         "position": [2605361.51, 3384796.12, 4736467.27]
+      }],
+      "background": {
+         "type": "color",
+         "value": "#000000"
+      },
+      "tileLayer": [{
+         "name": "高德地图",
+         "style": {
+            "template": "normal",
+            "brightness": 1
+         },
+         "type": "TileLayer",
+         "imgSrc": "baseMap/system/baseMap04.png",
+         "url": "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}"
+      }],
+      "terrainExaggeration": 1,
+      "exportTime": 20210121103308,
+      "scenes": [],
+      "layers": [{
+         "renderOrder": -50,
+         "labelId": 3,
+         "enable": true,
+         "name": "secondary",
+         "layerConfig": {
+            "type": "image",
+            "numPass": 1,
+            "texType": "image",
+            "width": 3,
+            "speed": 1,
+            "effect": false,
+            "lineType": "Plane",
+            "imageUrl": "/image/icon_huyang_1551674483316.png",
+            "blending": false
+         },
+         "id": 35785,
+         "type": "FeatureLayer",
+         "url": "/geojson/6b68f2b7fb145ca1a6e22d27403efcbc.geojson",
+         "geometryType": "GeoLine"
+      }, {
+         "renderOrder": -46,
+         "labelId": 4,
+         "enable": true,
+         "name": "smallRoad",
+         "layerConfig": {
+            "type": "vector",
+            "numPass": 1,
+            "texType": "vector",
+            "width": 3,
+            "speed": 78.8,
+            "effect": false,
+            "lineType": "Plane",
+            "color": "rgba(153,0,244,0.82)",
+            "blending": false
+         },
+         "id": 35789,
+         "type": "FeatureLayer",
+         "url": "/geojson/7ef041fd043d1d4045b9dceb633ad00c.geojson",
+         "geometryType": "GeoLine"
+      }, {
+         "renderOrder": -44,
+         "labelId": 6,
+         "enable": true,
+         "name": "motorway",
+         "layerConfig": {
+            "type": "image",
+            "numPass": 1,
+            "texType": "image",
+            "width": 3,
+            "speed": 0,
+            "effect": false,
+            "blending": false,
+            "postRadialBlur": false,
+            "lineType": "Plane",
+            "imageUrl": "/image/icon_huyang_1551239894429.png",
+            "opacity": 1.0
+         },
+         "id": 35791,
+         "type": "FeatureLayer",
+         "url": "/geojson/d5258b630fa62666faff94003ce3dfa6.geojson",
+         "geometryType": "GeoLine"
+      }],
+      "depthMode": 1,
+      "map": {
+         "style": {
+            "fog": true,
+            "atmosphere": true,
+            "fogExpColor": "#ffffff",
+            "fogExpDensity": 0,
+            "fogDensity": 1,
+            "fogExp": false,
+            "night": false
+         },
+         "type": "Map"
+      }
+   },
+   "success": 1
+}

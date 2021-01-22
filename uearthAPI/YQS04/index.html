@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线路</title>
+    <!-- 引包 -->
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/uearth.min.v1.7.8.5.js"></script>
+    <!-- 样式 -->
+    <style>
+        button {
+            width: 120px;
+            height: 60px;
+            position: absolute;
+            top: 8px;
+            background-color: rgb(204, 208, 209);
+            outline: none;
+            /* 手掌 */
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div3d"></div>
+    <!-- 按钮 -->
+    <button id="created">线路切换</button>
+
+    <!-- 操作 -->
+    <script>
+        window.onload = function () {
+            //创建地图图层
+            var app = new THING.App();
+            app.background = [0, 0, 0];
+            //创建地图
+            var map = app.create({
+                type: 'Map',
+                attribution: '高德',
+                //样式
+                style: {
+                    night: false
+                }
+            });
+            //创建瓦片层级
+            var tileLayer1 = app.create({
+                type: 'TileLayer',
+                name: '卫星影像图层',
+                //卫星图像服务   
+                url: 'http://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+                style: {
+                    template: CMAP.TileLayerStyle.DARKBLUE //加滤镜
+                }
+            });
+            //加入到map层
+            map.addLayer(tileLayer1);
+
+            //创建一个瓦片图层
+            var thingLayer = app.create({
+                type: 'ThingLayer',
+                name: 'thingLayer01'
+            })
+            //加入
+            map.addLayer(thingLayer);
+
+            //摄影机飞行
+            app.camera.earthFlyTo({
+                time: 3000,
+                lonlat: [116.38541042804717, 39.90459864611045],
+                height: 2000
+            })
+
+            // 3.添加事件
+            var line = document.getElementById('created');
+            console.log(line);
+
+
+            // 监听
+            line.addEventListener('click', function (ev) {
+                lined();
+            })
+
+            app.on(THING.EventType.CameraChange, function (ev) {
+                // 查找
+                var geoLine = thingLayer.query('管状线带贴图')[0];
+                //判断
+                if (geoLine) {
+                    //距离
+                    geoLine.renderer.width = app.camera.distance * 0.01
+                }
+            });
+
+            //方法
+            function lined() {
+                //查找
+                var geoLine = thingLayer.query('管状线带贴图')[0];
+                //没有找到
+                if (!geoLine) {
+                    geoLine = app.create({
+                        type: 'GeoLine',
+                        name: '管状线带贴图',
+                        coordinates: [
+                            [116.36808335781097, 39.90437231918103],
+                            [116.37653768062592, 39.90434351388183],
+                            [116.38541042804717, 39.90459864611045],
+                            [116.3970512151718, 39.90499780269116],
+                            [116.40042006969452, 39.905104792719634],
+                            [116.40524268150331, 39.90725293248321],
+                            [116.41170680522919, 39.90642987678102]
+                        ],
+                        //渲染管状线（带贴图）
+                        renderer: {
+                            type: 'vertor',
+                            //管状
+                            lineType: 'Pipe',
+                            //线的颜色
+                            color: 'rgba(92, 243, 104, 0.8)',
+                            //半径
+                            width: 10,
+                            speed: 1,
+                        }
+                    });
+                    //创建
+                    thingLayer.add(geoLine);
+
+                } else {
+                    map.removeLayer(thingLayer);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>citybuilder</title>
+    
+    <!-- 引包 -->
+    <script src="./js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="./js/uearth.min.v1.7.8.5.js"></script>
+</head>
+
+<body>
+    <div id="3d"></div>
+
+    <!-- 代码 -->
+    <script>
+        window.onload = function () {
+            var app = new THING.App({
+                container: '3d'
+            });
+
+            app.create({
+                type: 'Map',
+                url: '/map/map.json',
+                resourceConfig: {
+                    resourcePrefix: '/map', // 资源路径前缀
+                    baseLayerUrls: [
+                        'https://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}'
+                    ], // 瓦片图层
+                },
+                complete: function (event) {
+                    console.log(event.object.userLayers.length);
+                }
+            });
+            app.one(THING.EventType.CameraChangeEnd, () => {
+                setTimeout(() => {
+                    // 清除矢量球
+                    const ball = app.query('#vectorBaseLayer')[0];
+                    if (ball) ball.destroy();
+                }, 500);
+            });
+        }
+    </script>
+</body>
+
+</html>

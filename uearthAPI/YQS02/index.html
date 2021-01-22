@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摄影机飞行</title>
+
+    <!-- 引包 -->
+    <script src="../js/thingjs.min-V1.2.7.7.js"></script>
+    <script src="../js/uearth.min.v1.7.8.5.js"></script>
+</head>
+
+<body>
+    <div id="div3d"></div>
+
+    <!-- 代码 -->
+    <script>
+        window.onload = function () {
+            var app = new THING.App({
+                container: 'div3d'
+            });
+
+            var map = app.create({
+                type: 'Map',
+                url: './map/map.json',
+                resourceConfig: {
+                    resourcePrefix: './map', // 资源路径前缀
+                    baseLayerUrls: [
+                        'https://webst0{1,2,3,4}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}'
+                    ], // 瓦片图层
+                },
+                complete: function (event) {
+                    console.log(event.object.userLayers.length);
+                }
+            });
+            app.one(THING.EventType.CameraChangeEnd, () => {
+                setTimeout(() => {
+                    // 清除矢量球
+                    const ball = app.query('#vectorBaseLayer')[0];
+                    if (ball) ball.destroy();
+                }, 500);
+            });
+
+            // 创建一个 ThingLayer
+            var thingLayer = app.create({
+                type: "ThingLayer",
+                name: "thingLayer01"
+            });
+            // 将ThingLayer添加到地图中
+            map.addLayer(thingLayer);
+
+            // 数组存放地标
+            var datapoint = [
+                [116.32607460021971, 39.88711750708241],
+                [116.32605314254761, 39.89340672350553],
+                [116.31362915039061, 39.90028797978328],
+                [116.31377935409544, 39.89653465292133],
+                [116.31903648376465, 39.89775286048808],
+                [116.31313562393187, 39.90142381449796]
+            ]
+            for (let i = 0; i < datapoint.length; i++) {
+                // 创建点位
+                geoPoint = app.create({
+                    type: 'GeoPoint',
+                    name: '地铁站1号',
+                    userData: {
+                        '类别': '地铁站',
+                        '线路': '二号线'
+                    },
+                    coordinates: datapoint[i],
+                    renderer: {
+                        type: 'image', // image 代表使用图片
+                        url: 'https://www.thingjs.com/static/image/train_station.png', // 图片 url
+                        size: 500, // 缩放比例 当 keepSize 为 false 时 单位为 米
+                        keepSize: false // 图标近大远小
+                    }
+                });
+                thingLayer.add(geoPoint); // 将一个点加到ThingLayer中
+
+                // 给每个geopiont添加一个点击事件
+                geoPoint.on('click', function () {
+                    // 摄影机飞到特定位置和角度
+                    app.camera.earthFlyTo({
+                        'time': 2000,
+                        'lonlat': datapoint[i],
+                        'height': 1000,
+                        complete: function () {
+                            console.log('飞行ing');
+                        }
+                    });
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>
